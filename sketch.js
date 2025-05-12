@@ -32,11 +32,16 @@ function drawFaceMesh() {
 
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
-    beginShape();
-    for (let i = 0; i < points.length; i++) {
-      const [x, y] = keypoints[points[i]];
-      vertex(x, y);
+    if (keypoints) { // 確保 keypoints 存在
+      beginShape();
+      for (let i = 0; i < points.length; i++) {
+        const index = points[i];
+        if (keypoints[index]) { // 確保點的索引有效
+          const [x, y] = keypoints[index];
+          vertex(x, y);
+        }
+      }
+      endShape(CLOSE);
     }
-    endShape(CLOSE);
   }
 }
