@@ -31,21 +31,16 @@ function draw() {
 
 function drawFaceMesh() {
   stroke(0, 0, 255); // 藍色線條
-  strokeWeight(5); // 線條粗細為5
-  noFill();
+  strokeWeight(15); // 線條粗細為15
 
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
     if (keypoints) { // 確保 keypoints 存在
-      beginShape();
-      for (let i = 0; i < points.length; i++) {
-        const index = points[i];
-        if (keypoints[index]) { // 確保點的索引有效
-          const [x, y] = keypoints[index];
-          vertex(x, y);
-        }
+      for (let i = 0; i < points.length - 1; i++) {
+        const [x1, y1] = keypoints[points[i]];
+        const [x2, y2] = keypoints[points[i + 1]];
+        line(x1, y1, x2, y2); // 畫出兩點之間的線
       }
-      endShape(CLOSE);
     }
   }
 }
