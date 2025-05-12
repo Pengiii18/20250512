@@ -9,7 +9,7 @@ function setup() {
   video.size(400, 400);
   video.hide();
 
-  facemesh = ml5.facemesh(video, modelReady);
+  facemesh = ml5.facemesh(video, modelReady, modelError);
   facemesh.on("predict", results => {
     predictions = results;
   });
@@ -17,6 +17,10 @@ function setup() {
 
 function modelReady() {
   console.log("Facemesh model loaded!");
+}
+
+function modelError(err) {
+  console.error("Facemesh model failed to load:", err);
 }
 
 function draw() {
@@ -27,7 +31,7 @@ function draw() {
 
 function drawFaceMesh() {
   stroke(0, 0, 255); // 藍色線條
-  strokeWeight(15); // 線條粗細為5
+  strokeWeight(5); // 線條粗細為5
   noFill();
 
   if (predictions.length > 0) {
