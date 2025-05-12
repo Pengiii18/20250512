@@ -34,18 +34,26 @@ function drawFaceMesh() {
       noFill();
 
       for (let i = 0; i < points.length - 1; i++) {
-        const [x1, y1] = keypoints[points[i]];
-        const [x2, y2] = keypoints[points[i + 1]];
-        if (x1 !== undefined && y1 !== undefined && x2 !== undefined && y2 !== undefined) {
-          line(x1, y1, x2, y2); // 畫出兩點之間的線
+        const idx1 = points[i];
+        const idx2 = points[i + 1];
+        if (keypoints[idx1] && keypoints[idx2]) {
+          const [x1, y1] = keypoints[idx1];
+          const [x2, y2] = keypoints[idx2];
+          if (isFinite(x1) && isFinite(y1) && isFinite(x2) && isFinite(y2)) {
+            line(x1, y1, x2, y2); // 畫出兩點之間的線
+          }
         }
       }
 
       // 將最後一點與第一點連接，形成閉合路徑
-      const [xStart, yStart] = keypoints[points[0]];
-      const [xEnd, yEnd] = keypoints[points[points.length - 1]];
-      if (xStart !== undefined && yStart !== undefined && xEnd !== undefined && yEnd !== undefined) {
-        line(xEnd, yEnd, xStart, yStart);
+      const idxStart = points[0];
+      const idxEnd = points[points.length - 1];
+      if (keypoints[idxStart] && keypoints[idxEnd]) {
+        const [xStart, yStart] = keypoints[idxStart];
+        const [xEnd, yEnd] = keypoints[idxEnd];
+        if (isFinite(xStart) && isFinite(yStart) && isFinite(xEnd) && isFinite(yEnd)) {
+          line(xEnd, yEnd, xStart, yStart);
+        }
       }
     }
   }
