@@ -35,11 +35,15 @@ function drawFaceMesh() {
 
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
-    if (keypoints) { // 確保 keypoints 存在
+    if (keypoints && keypoints.length > 0) { // 確保 keypoints 存在且有效
       for (let i = 0; i < points.length - 1; i++) {
-        const [x1, y1] = keypoints[points[i]];
-        const [x2, y2] = keypoints[points[i + 1]];
-        line(x1, y1, x2, y2); // 畫出兩點之間的線
+        const index1 = points[i];
+        const index2 = points[i + 1];
+        if (keypoints[index1] && keypoints[index2]) { // 確保索引有效
+          const [x1, y1] = keypoints[index1];
+          const [x2, y2] = keypoints[index2];
+          line(x1, y1, x2, y2); // 畫出兩點之間的線
+        }
       }
     }
   }
