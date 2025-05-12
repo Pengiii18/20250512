@@ -27,7 +27,7 @@ function draw() {
 
 function drawFaceMesh() {
   stroke(0, 0, 255); // 藍色線條
-  strokeWeight(5); // 線條粗細為5
+  strokeWeight(15); // 線條粗細為5
   noFill();
 
   if (predictions.length > 0) {
