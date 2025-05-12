@@ -35,43 +35,22 @@ function drawFaceMesh() {
       strokeWeight(15); // 線條粗細為15
       noFill();
 
-      // 繪製主要輪廓
-      for (let i = 0; i < points.length - 1; i++) {
-        const idx1 = points[i];
-        const idx2 = points[i + 1];
-        if (keypoints[idx1] && keypoints[idx2]) {
-          const [x1, y1] = keypoints[idx1];
-          const [x2, y2] = keypoints[idx2];
-          if (isFinite(x1) && isFinite(y1) && isFinite(x2) && isFinite(y2)) {
-            line(x1, y1, x2, y2);
-          }
-        }
-      }
+      // 使用 ml5.js 的方式繪製主要輪廓
+      drawOutline(keypoints, points);
 
-      // 將最後一點與第一點連接，形成閉合路徑
-      const idxStart = points[0];
-      const idxEnd = points[points.length - 1];
-      if (keypoints[idxStart] && keypoints[idxEnd]) {
-        const [xStart, yStart] = keypoints[idxStart];
-        const [xEnd, yEnd] = keypoints[idxEnd];
-        if (isFinite(xStart) && isFinite(yStart) && isFinite(xEnd) && isFinite(yEnd)) {
-          line(xEnd, yEnd, xStart, yStart);
-        }
-      }
+      // 使用 ml5.js 的方式繪製左眼輪廓
+      drawOutline(keypoints, leftEyePoints);
 
-      // 繪製左眼輪廓
-      drawEyeOutline(keypoints, leftEyePoints);
-
-      // 繪製右眼輪廓
-      drawEyeOutline(keypoints, rightEyePoints);
+      // 使用 ml5.js 的方式繪製右眼輪廓
+      drawOutline(keypoints, rightEyePoints);
     }
   }
 }
 
-function drawEyeOutline(keypoints, eyePoints) {
-  for (let i = 0; i < eyePoints.length - 1; i++) {
-    const idx1 = eyePoints[i];
-    const idx2 = eyePoints[i + 1];
+function drawOutline(keypoints, pointArray) {
+  for (let i = 0; i < pointArray.length - 1; i++) {
+    const idx1 = pointArray[i];
+    const idx2 = pointArray[i + 1];
     if (keypoints[idx1] && keypoints[idx2]) {
       const [x1, y1] = keypoints[idx1];
       const [x2, y2] = keypoints[idx2];
@@ -82,8 +61,8 @@ function drawEyeOutline(keypoints, eyePoints) {
   }
 
   // 將最後一點與第一點連接，形成閉合路徑
-  const idxStart = eyePoints[0];
-  const idxEnd = eyePoints[eyePoints.length - 1];
+  const idxStart = pointArray[0];
+  const idxEnd = pointArray[pointArray.length - 1];
   if (keypoints[idxStart] && keypoints[idxEnd]) {
     const [xStart, yStart] = keypoints[idxStart];
     const [xEnd, yEnd] = keypoints[idxEnd];
