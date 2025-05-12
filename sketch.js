@@ -4,6 +4,7 @@ let predictions = [];
 const points = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
 const leftEyePoints = [243, 190, 56, 28, 27, 29, 30, 247, 130, 25, 110, 24, 23, 22, 26, 112];
 const rightEyePoints = [359, 467, 260, 259, 257, 258, 286, 444, 463, 341, 256, 252, 253, 254, 339, 255];
+const fingerPoints = [10, 22, 34, 46, 58]; // 假設這些是手指頭的索引點
 
 function setup() {
   createCanvas(400, 400);
@@ -25,6 +26,7 @@ function draw() {
   background(220);
   image(video, 0, 0, width, height);
   drawFaceMesh();
+  drawFingers();
 }
 
 function drawFaceMesh() {
@@ -43,6 +45,26 @@ function drawFaceMesh() {
 
       // 使用 ml5.js 的方式繪製右眼輪廓
       drawOutline(keypoints, rightEyePoints);
+    }
+  }
+}
+
+function drawFingers() {
+  if (predictions.length > 0) {
+    const keypoints = predictions[0].scaledMesh;
+    if (keypoints && keypoints.length > 0) {
+      fill(255, 0, 0); // 紅色點
+      noStroke();
+
+      for (let i = 0; i < fingerPoints.length; i++) {
+        const idx = fingerPoints[i];
+        if (keypoints[idx]) {
+          const [x, y] = keypoints[idx];
+          if (isFinite(x) && isFinite(y)) {
+            ellipse(x, y, 10, 10); // 在手指頭位置畫一個紅色圓點
+          }
+        }
+      }
     }
   }
 }
