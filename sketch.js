@@ -9,7 +9,7 @@ function setup() {
   video.size(400, 400);
   video.hide();
 
-  facemesh = ml5.facemesh(video, modelReady, modelError);
+  facemesh = ml5.facemesh(video, modelReady);
   facemesh.on("predict", results => {
     predictions = results;
   });
@@ -19,34 +19,24 @@ function modelReady() {
   console.log("Facemesh model loaded!");
 }
 
-function modelError(err) {
-  console.error("Facemesh model failed to load:", err);
-}
-
 function draw() {
   background(220);
   image(video, 0, 0, width, height);
-  try {
-    drawFaceMesh();
-  } catch (err) {
-    console.error("Error in drawFaceMesh:", err);
-  }
+  drawFaceMesh();
 }
 
 function drawFaceMesh() {
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
-    if (keypoints && keypoints.length > 0) { // 確保 keypoints 存在且有效
+    if (keypoints && keypoints.length > 0) {
       stroke(0, 0, 255); // 藍色線條
       strokeWeight(15); // 線條粗細為15
       noFill();
 
       for (let i = 0; i < points.length - 1; i++) {
-        const index1 = points[i];
-        const index2 = points[i + 1];
-        if (keypoints[index1] && keypoints[index2]) { // 確保索引有效
-          const [x1, y1] = keypoints[index1];
-          const [x2, y2] = keypoints[index2];
+        const [x1, y1] = keypoints[points[i]];
+        const [x2, y2] = keypoints[points[i + 1]];
+        if (x1 !== undefined && y1 !== undefined && x2 !== undefined && y2 !== undefined) {
           line(x1, y1, x2, y2); // 畫出兩點之間的線
         }
       }
