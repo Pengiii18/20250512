@@ -1,8 +1,7 @@
 let facemesh;
 let video;
 let predictions = [];
-// 嘴巴的點索引
-const mouthPoints = [61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291, 61];
+const points = [409, 270, 269, 267, 0, 37, 39, 40, 185, 61, 146, 91, 181, 84, 17, 314, 405, 321, 375, 291];
 
 function setup() {
   createCanvas(400, 400);
@@ -23,10 +22,10 @@ function modelReady() {
 function draw() {
   background(220);
   image(video, 0, 0, width, height);
-  drawMouth();
+  drawFaceMesh();
 }
 
-function drawMouth() {
+function drawFaceMesh() {
   if (predictions.length > 0) {
     const keypoints = predictions[0].scaledMesh;
     if (keypoints && keypoints.length > 0) {
@@ -34,14 +33,20 @@ function drawMouth() {
       strokeWeight(15); // 線條粗細為15
       noFill();
 
-      beginShape();
-      for (let i = 0; i < mouthPoints.length; i++) {
-        const [x, y] = keypoints[mouthPoints[i]];
-        if (x !== undefined && y !== undefined) {
-          vertex(x, y); // 繪製嘴巴的點
+      for (let i = 0; i < points.length - 1; i++) {
+        const [x1, y1] = keypoints[points[i]];
+        const [x2, y2] = keypoints[points[i + 1]];
+        if (x1 !== undefined && y1 !== undefined && x2 !== undefined && y2 !== undefined) {
+          line(x1, y1, x2, y2); // 畫出兩點之間的線
         }
       }
-      endShape(CLOSE); // 閉合嘴巴的路徑
+
+      // 將最後一點與第一點連接，形成閉合路徑
+      const [xStart, yStart] = keypoints[points[0]];
+      const [xEnd, yEnd] = keypoints[points[points.length - 1]];
+      if (xStart !== undefined && yStart !== undefined && xEnd !== undefined && yEnd !== undefined) {
+        line(xEnd, yEnd, xStart, yStart);
+      }
     }
   }
 }
